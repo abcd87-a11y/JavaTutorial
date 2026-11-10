@@ -1,4 +1,4 @@
-public class Ticket {
+public class Ticket implements Identifizierbar{
     //DIe Eigenschaften (Fields)
     private int id;
     private String title;               //String wird in Java großgeschrieben
@@ -19,5 +19,10 @@ public class Ticket {
     //Setter: Ändert den Wert
     public void setStatus(TicketStatus neuerStatus){
         this.status = neuerStatus;
+    }
+
+    //Wir müssen getId() anbieten, um den Vertrag zu erfüllen
+    public int getId(){
+        return this.id;
     }
 }
