@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 //T muss das Interface Identifizierbar implementieren
@@ -13,6 +14,10 @@ public class Speicher<T extends Identifizierbar>{
 
     public T finden(int id){
         return this.map.get(id);
+    }
+
+    public List<T> holeAlle(){
+        return this.map.values().stream().toList();
     }
 
 }

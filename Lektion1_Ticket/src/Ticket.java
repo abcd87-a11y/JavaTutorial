@@ -25,4 +25,8 @@ public class Ticket implements Identifizierbar{
     public int getId(){
         return this.id;
     }
+    //Getter für den Status
+    public TicketStatus getStatus(){
+        return this.status;
+    }
 }
