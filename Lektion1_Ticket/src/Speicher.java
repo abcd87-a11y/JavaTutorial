@@ -13,7 +13,12 @@ public class Speicher<T extends Identifizierbar>{
     }
 
     public T finden(int id){
-        return this.map.get(id);
+        T ergebnis = this.map.get(id);
+
+        if(ergebnis == null){
+            throw new ObjektNichtGefundenException("Kein Eintrag mit ID " + id + " gefunden!");
+        }
+        return ergebnis;
     }
 
     public List<T> holeAlle(){

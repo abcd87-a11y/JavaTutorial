@@ -23,5 +23,14 @@ public class Main {
                 .toList();
         System.out.println("Anzahl offener Tickets: " + offeneTickets.size());
         System.out.println("-------------------------------------------");
+        try{
+            System.out.println("Suche nach Ticket 99...");
+            Ticket fehlerTicket = ticketSpeicher.finden(99);
+            System.out.println("Gefunden: " + fehlerTicket.getTitle());
+        }catch(ObjektNichtGefundenException e){
+            //Das Programm stürzt nicht ab, sondern landet hier im "Sicherheitsnetz"
+            System.out.println("Hoppla, Fehler abgefangen: " + e.getMessage());
+        }
+        System.out.println("Das Programm läuft normal weiter");
     }
 }
