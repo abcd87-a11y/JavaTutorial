@@ -6,6 +6,10 @@ public class Main {
 
         //Lektion 3. Den Universal-Speicher für Tickets erschaffen
         Speicher<Ticket> ticketSpeicher = new Speicher<>();
+        Speicher<User> userSpeicher = new Speicher<>();
+
+        User max = new User(101, "Max Mustermann");
+        User erika = new User(102, "Erika Musterfrau");
 
         //Lektion 1. Tickets erschaffen
         Ticket neuesTicket = new Ticket(1, "Drucker brennt", TicketStatus.OPEN);
@@ -16,6 +20,11 @@ public class Main {
         ticketSpeicher.speichern(neuesTicket);
         ticketSpeicher.speichern(neuesTicket2);
         ticketSpeicher.speichern(neuesTicket3);
+
+        userSpeicher.speichern(max);
+        userSpeicher.speichern(erika);
+
+        neuesTicket.setBearbeiter(max);
 
         //Lektion 4: Filtern mit Streams und Lambdas
         List<Ticket> offeneTickets = ticketSpeicher.holeAlle().stream()
@@ -32,5 +41,6 @@ public class Main {
             System.out.println("Hoppla, Fehler abgefangen: " + e.getMessage());
         }
         System.out.println("Das Programm läuft normal weiter");
+        System.out.println("Bearbeiter von Ticket 1: " + neuesTicket.getBearbeiter().getName());
     }
 }

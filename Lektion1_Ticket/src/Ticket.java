@@ -1,14 +1,23 @@
 public class Ticket implements Identifizierbar{
-    //DIe Eigenschaften (Fields)
+    //Die Eigenschaften (Fields)
     private int id;
     private String title;               //String wird in Java großgeschrieben
     private TicketStatus status;        //Unser Enum als Datentyp
+    private User bearbeiter;            //EIn Ticket hat jetzt einen Bearbeiter
 
     //Wird innherlab der Klasse "Ticket" geschrieben:
     public Ticket(int id, String title, TicketStatus status){
         this.id =id;
         this.title = title;
         this.status = status;
+    }
+
+    public User getBearbeiter(){
+        return this.bearbeiter;
+    }
+
+    public void setBearbeiter(User bearbeiter){
+        this.bearbeiter = bearbeiter;
     }
 
     //Getter: Gibt den Wert zurück
