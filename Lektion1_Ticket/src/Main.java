@@ -41,6 +41,16 @@ public class Main {
             System.out.println("Hoppla, Fehler abgefangen: " + e.getMessage());
         }
         System.out.println("Das Programm läuft normal weiter");
-        System.out.println("Bearbeiter von Ticket 1: " + neuesTicket.getBearbeiter().getName());
+        String name = neuesTicket2.getBearbeiter()
+                .map(User::getName) //Kurzschreibweise für u ->u.getName()
+                .orElse("Nicht zugewiesen");
+
+        System.out.println("Bearbeiter von Ticket 2:" + name);
+
+        //Alle Tickets von Max sicher herausfiltern
+        List<Ticket> maxTickets = ticketSpeicher.holeAlle().stream()
+                .filter(t->t.getBearbeiter().map(u -> u.equals(max)).orElse(false))
+                .toList();
+        System.out.println("Max Tickets: " + maxTickets.size());
     }
 }

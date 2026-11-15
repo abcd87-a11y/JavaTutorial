@@ -1,3 +1,5 @@
+import java.util.Optional;
+
 public class Ticket implements Identifizierbar{
     //Die Eigenschaften (Fields)
     private int id;
@@ -12,8 +14,9 @@ public class Ticket implements Identifizierbar{
         this.status = status;
     }
 
-    public User getBearbeiter(){
-        return this.bearbeiter;
+    public Optional<User> getBearbeiter(){
+        //Optional.ofNullable() packt den Bearbeiter in eine Box - auch wenn er null ist
+        return Optional.ofNullable(this.bearbeiter);
     }
 
     public void setBearbeiter(User bearbeiter){
