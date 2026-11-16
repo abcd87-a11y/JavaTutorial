@@ -4,6 +4,8 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
 
+        DateiManager dateiManager = new DateiManager();
+
         //Lektion 3. Den Universal-Speicher für Tickets erschaffen
         Speicher<Ticket> ticketSpeicher = new Speicher<>();
         Speicher<User> userSpeicher = new Speicher<>();
@@ -52,5 +54,7 @@ public class Main {
                 .filter(t->t.getBearbeiter().map(u -> u.equals(max)).orElse(false))
                 .toList();
         System.out.println("Max Tickets: " + maxTickets.size());
+
+        dateiManager.speicherTickets(ticketSpeicher.holeAlle());
     }
 }
