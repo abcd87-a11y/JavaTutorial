@@ -1,60 +1,70 @@
 //Strg + Enter
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-
+        Scanner scanner = new Scanner(System.in);
         DateiManager dateiManager = new DateiManager();
-
-        //Lektion 3. Den Universal-Speicher für Tickets erschaffen
         Speicher<Ticket> ticketSpeicher = new Speicher<>();
-        Speicher<User> userSpeicher = new Speicher<>();
 
-        User max = new User(101, "Max Mustermann");
-        User erika = new User(102, "Erika Musterfrau");
-
-        //Lektion 1. Tickets erschaffen
-        Ticket neuesTicket = new Ticket(1, "Drucker brennt", TicketStatus.OPEN);
-        Ticket neuesTicket2 = new Ticket(2, "Drucker hat spaß", TicketStatus.IN_PROGRESS);
-        Ticket neuesTicket3 = new Ticket(3, "Drucker hat fertig", TicketStatus.RESOLVED);
-
-        //Lektion 3. Tickets speichern (ohne ID-Übergabe!)
-        ticketSpeicher.speichern(neuesTicket);
-        ticketSpeicher.speichern(neuesTicket2);
-        ticketSpeicher.speichern(neuesTicket3);
-
-        userSpeicher.speichern(max);
-        userSpeicher.speichern(erika);
-
-        neuesTicket.setBearbeiter(max);
-
-        //Lektion 4: Filtern mit Streams und Lambdas
-        List<Ticket> offeneTickets = ticketSpeicher.holeAlle().stream()
-                .filter(t -> t.getStatus() == TicketStatus.OPEN)
-                .toList();
-        System.out.println("Anzahl offener Tickets: " + offeneTickets.size());
-        System.out.println("-------------------------------------------");
-        try{
-            System.out.println("Suche nach Ticket 99...");
-            Ticket fehlerTicket = ticketSpeicher.finden(99);
-            System.out.println("Gefunden: " + fehlerTicket.getTitle());
-        }catch(ObjektNichtGefundenException e){
-            //Das Programm stürzt nicht ab, sondern landet hier im "Sicherheitsnetz"
-            System.out.println("Hoppla, Fehler abgefangen: " + e.getMessage());
+        //1. Beim Programmstart alle bestehendenTickets aus der CSV laden
+        for (Ticket t : dateiManager.ladeTickets()){
+            ticketSpeicher.speichern(t);
         }
-        System.out.println("Das Programm läuft normal weiter");
-        String name = neuesTicket2.getBearbeiter()
-                .map(User::getName) //Kurzschreibweise für u ->u.getName()
-                .orElse("Nicht zugewiesen");
 
-        System.out.println("Bearbeiter von Ticket 2:" + name);
+        boolean laueft = true;
 
-        //Alle Tickets von Max sicher herausfiltern
-        List<Ticket> maxTickets = ticketSpeicher.holeAlle().stream()
-                .filter(t->t.getBearbeiter().map(u -> u.equals(max)).orElse(false))
-                .toList();
-        System.out.println("Max Tickets: " + maxTickets.size());
+        //2. Hauptschleife des Programms
+        while (laueft) {
+            System.out.println("\n=== ISSUE TRACKER MENÜ ===");
+            System.out.println("1 - Neues Ticket anlegen");
+            System.out.println("2 - Alle Tickets anzeigen");
+            System.out.println("3 - Ticket nach ID suchen");
+            System.out.println("4 - Speichern & Beenden");
+            System.out.print("Deine Wahl: ");
 
-        dateiManager.speicherTickets(ticketSpeicher.holeAlle());
+            String wahl = scanner.nextLine();
+
+            switch (wahl) {
+                case "1" ->{
+                    System.out.print("ID: ");
+                    int id = Integer.parseInt(scanner.nextLine());
+                    System.out.print("Titel: ");
+                    String titel = scanner.nextLine();
+                    Ticket neuesTicket = new Ticket(id, titel, TicketStatus.OPEN);
+                    ticketSpeicher.speichern(neuesTicket);
+                    System.out.println("Ticket #" + id + " angelegt!");
+                }
+                case "2" ->{
+                    System.out.println("\n--- Alle Tickets ---");
+                    for(Ticket t : ticketSpeicher.holeAlle()){
+                        System.out.println("#" + t.getId() + " | " + t.getTitle() + " [" + t.getStatus() + "]");
+                    }
+                }
+                case "3" ->{
+                    System.out.print("ID: ");
+                    try{
+                        int id = Integer.parseInt(scanner.nextLine());
+                        Ticket gesuchtesTicket = ticketSpeicher.finden(id);
+                        System.out.println("Titel: " + gesuchtesTicket.getTitle());
+
+                    }catch (ObjektNichtGefundenException e){
+                        System.out.println("Nicht geklappt: " + e.getMessage());
+                    }catch (NumberFormatException e){
+                        System.out.println("Bitte gib eine gültige Zahl als ID ein!");
+                    }
+                }
+                case "4" ->{
+                    //3. Beim beenden alles sicher auf die Festplatte schreiben
+                    dateiManager.speicherTickets(ticketSpeicher.holeAlle());
+                    laueft = false;
+                    System.out.println("Programm beendet. Bis zum nächsten Mal!");
+                }
+                default -> System.out.println("Ungültige Eingabe, bitte 1-4 wählen!");
+            }
+        }
+        scanner.close();
     }
 }
